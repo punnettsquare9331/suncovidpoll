@@ -1,0 +1,42 @@
+---
+title: "Insights From The COVID-19 Public Opinion Poll"
+author: "Puneet Velidi"
+date: '2022-04-26'
+output: html_document
+---
+```{r}
+install.packages("tidyverse")
+library(tidyverse)
+```
+
+```{r}
+covid_poll = read.csv("C:/Users/punee/Downloads/Copy of The Cornell Daily Sun_ COVID-19 Policy Poll Spring 2022 (Responses) - Form Responses 1.csv")
+```
+
+Converting the data into a numeric dataframe
+```{r}
+covid_poll = covid_poll |> select(2:38) |> mutate(across(,as.factor)) 
+```
+
+```{r}
+install.packages("klaR")
+library(klaR)
+```
+
+```{r}
+wss = function(k){
+  sum(kmodes(covid_poll,k,iter.max = 15)$withindiff)
+}
+val_wss = sapply(1:20,wss)
+
+plot(1:20, val_wss,
+     type="b", pch = 19, frame = FALSE, 
+     xlab="Number of clusters K",
+     ylab="Total within-clusters simple matching distance")
+ 
+```
+
+```{r}
+kmodes(covid_poll,5,iter.max = 15)$modes 
+```
+
